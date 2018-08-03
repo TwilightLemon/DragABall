@@ -68,13 +68,17 @@ namespace DragABall
                 cn.Loads();
                 cData.Add(cn);
             }
+            var xr = new Random(Con.GetRandomSeed());
             elx = new Ellipse()
             {
                 Opacity = 0.5,
                 Height = 50,
                 Width = 50,
-                Fill = new SolidColorBrush(Color.FromArgb(255, 251, 251, 251)),
-                Uid="st"
+                Fill = new SolidColorBrush
+                (Color.FromRgb(Convert.ToByte(xr.Next(0, 255)),
+                Convert.ToByte(xr.Next(0, 255)),
+                Convert.ToByte(xr.Next(0, 255)))),
+                Uid ="st"
             };
             elx.MouseEnter += Elx_MouseEnter;
             elx.MouseDown += Elx_MouseDown;
@@ -102,11 +106,11 @@ namespace DragABall
             if (indexs == 12)
             {
                 var ani = new DoubleAnimationUsingKeyFrames();
+                ani.Completed += delegate { layout.Children.Remove(elx); if (layout.Children.Count == 0) MessageBox.Show("你赢了"); };
                 ani.KeyFrames.Add(new LinearDoubleKeyFrame(600, TimeSpan.FromSeconds(0.3)));
                 ani.KeyFrames.Add(new LinearDoubleKeyFrame(0, TimeSpan.FromSeconds(0.6)));
                 elx.BeginAnimation(HeightProperty, ani);
                 elx.BeginAnimation(WidthProperty, ani);
-                ani.Completed += delegate { layout.Children.Remove(elx);if(layout.Children.Count==0) MessageBox.Show("你赢了"); };
             }
             else indexs++;
         }
